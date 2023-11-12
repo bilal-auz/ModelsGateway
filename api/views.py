@@ -18,15 +18,13 @@ def index(request):
 
 @api_view(['GET'])
 def bert_large(request):
-    if(not request.body):  return HttpResponse("No Body")
-    body = json.loads(request.body)
+    if(not request.query_params['context']): return HttpResponse("No Context")
+    if(not request.query_params['question']): return HttpResponse("No Question")
 
-    if('context' in body and 'question' in body):
-        context = body['context']
-        question = body['question']
-        data = bert_large_service(context, question)
-    else:
-        data = "Empty Body"
+    context = request.query_params['context']
+    question = request.query_params['question']
+    
+    data = bert_large_service(context, question)
 
     return HttpResponse(data)
 
