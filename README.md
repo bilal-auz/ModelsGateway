@@ -11,6 +11,10 @@ Install project dependencies:
 
     $ pip install -r requirements.txt
     
-run the development server:
+Run the development server:
 
     $ python manage.py runserver
+
+Test the API:
+
+    $ http://127.0.0.1:8000/api
