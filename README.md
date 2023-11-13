@@ -18,3 +18,7 @@ Run the development server:
 Test the API:
 
     $ http://127.0.0.1:8000/api
+    
+Install the frontend:
+
+    $ https://github.com/bilal-auz/ModelsGatewayUI/
