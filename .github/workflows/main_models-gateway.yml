@@ -23,14 +23,14 @@ jobs:
       uses: docker/login-action@v2
       with:
         registry: https://index.docker.io/v1/
-        username: ${{ secrets.AzureAppService_ContainerUsername_de7cf4d8d89c4262a2b6c9c67a1a2070 }}
-        password: ${{ secrets.AzureAppService_ContainerPassword_8de1ef4ef6e644c6a7b26f020fe48b67 }}
+        username: ${{ secrets.AzureAppService_ContainerUsername_0e4678b93da84f9780807d44bfff205a }}
+        password: ${{ secrets.AzureAppService_ContainerPassword_cf0fc829b46e4733928a7a5849f15d71 }}
 
     - name: Build and push container image to registry
       uses: docker/build-push-action@v3
       with:
         push: true
-        tags: index.docker.io/${{ secrets.AzureAppService_ContainerUsername_de7cf4d8d89c4262a2b6c9c67a1a2070 }}/bilalauz/models-gateway:${{ github.sha }}
+        tags: index.docker.io/${{ secrets.AzureAppService_ContainerUsername_0e4678b93da84f9780807d44bfff205a }}/bilalauz/models-gateway:${{ github.sha }}
         file: ./Dockerfile
 
   deploy:
@@ -47,5 +47,5 @@ jobs:
       with:
         app-name: 'models-gateway'
         slot-name: 'production'
-        publish-profile: ${{ secrets.AzureAppService_PublishProfile_b4ea7a5468154daa98d1b2433b91dc28 }}
-        images: 'index.docker.io/${{ secrets.AzureAppService_ContainerUsername_de7cf4d8d89c4262a2b6c9c67a1a2070 }}/bilalauz/models-gateway:${{ github.sha }}'
+        publish-profile: ${{ secrets.AzureAppService_PublishProfile_be1804b6f37341aa8d9fb637520b2b76 }}
+        images: 'index.docker.io/${{ secrets.AzureAppService_ContainerUsername_0e4678b93da84f9780807d44bfff205a }}/bilalauz/models-gateway:${{ github.sha }}'
