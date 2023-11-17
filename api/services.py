@@ -21,10 +21,10 @@ def bert_large_service(context, question):
 
     return answer
 
-def bert_large_service_huggingFace_API(context, question):
+def bert_large_service_huggingFace_API(context, question, model_name):
     HUGGING_FACE_API_TOKEN = os.environ.get('HUGGING_FACE_API_TOKEN', config("HUGGING_FACE_API_TOKEN"))
     
-    API_URL = "https://api-inference.huggingface.co/models/bert-large-uncased-whole-word-masking-finetuned-squad"
+    API_URL = "https://api-inference.huggingface.co/models/"+model_name
     headers = {"Authorization": f'Bearer {HUGGING_FACE_API_TOKEN}'}
 
     try:
@@ -37,6 +37,9 @@ def bert_large_service_huggingFace_API(context, question):
                 "question": question,
                 "context": context
             },
+            "options":{
+                "wait_for_model":True
+            }
         })
 
         if(not output['answer']): 
