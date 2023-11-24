@@ -7,34 +7,42 @@ import torch
 #             question (the question to be answered),
 #             context (the text in which the answer can be found).
 def QA(model, tokenizer, question, context):
-    inputs, sentence_embedding, tokens = encoder(tokenizer, question, context)
+    inputs, sentence_embedding = encoder(tokenizer, question, context)
 
-    outputs = model(input_ids=torch.tensor([inputs]), token_type_ids=torch.tensor([sentence_embedding]))
+    outputs = model(input_ids=inputs, token_type_ids=sentence_embedding)
 
-    answer = getAnswer(outputs, tokens)
+    answer = getAnswer(outputs, inputs, tokenizer)
 
     print("Q:",question, "\nA:", answer, "\n")
     
     return answer
 
-
 #The encoder of the input
 def encoder(tokenizer, question, context):
-    encoding = tokenizer.encode_plus(text=question,text_pair=context)
-    inputs = encoding['input_ids']  #Token embeddings
-    sentence_embedding = encoding['token_type_ids']  #Segment embeddings
-    tokens = tokenizer.convert_ids_to_tokens(inputs) #input tokens
+    encoding = tokenizer(text=question, text_pair=context, return_tensors="pt")
+    inputs = encoding['input_ids']  # Token embeddings
+    sentence_embedding = encoding['token_type_ids']  # Segment embeddings
 
-    return inputs, sentence_embedding, tokens
+    question_tokens = tokenizer.tokenize(question)
+    context_tokens = tokenizer.tokenize(context)
+
+    print("Number of input Tokens:"
+          " total=" + str(len(question_tokens) + len(context_tokens)) +
+          " question=" + str(len(question_tokens)) +
+          " context=" + str(len(context_tokens)))
+    
+    return inputs, sentence_embedding
 
 #Extract the answer from the tensors
-def getAnswer(outputs, tokens):
-    start_scores, end_scores = outputs[:2]
+def getAnswer(outputs, input_ids, tokenizer):
+    start_logits, end_logits = outputs[:2]
 
-    start_index = torch.argmax(start_scores)
+    answer_start_index = torch.argmax(start_logits)
 
-    end_index = torch.argmax(end_scores)
+    answer_end_index = torch.argmax(end_logits)
 
-    answer = ' '.join(tokens[start_index:end_index+1])
+    predict_answer_tokens = input_ids[0, answer_start_index, answer_end_index + 1]
+
+    answer = tokenizer.decode(predict_answer_tokens, skip_special_tokens=False)
 
     return answer
