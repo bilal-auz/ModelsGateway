@@ -10,7 +10,9 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 
+import os
 from pathlib import Path
+from decouple import config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -29,7 +31,7 @@ ALLOWED_HOSTS = ['*',] #allow all hosts
 
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:3000',
-    'http://10.0.9.2:3000/'
+    os.environ.get('FRONTEND_URL', config("FRONTEND_URL"))
 ]
 
 # Application definition
